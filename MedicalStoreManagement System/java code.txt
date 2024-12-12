@@ -1,0 +1,198 @@
+import java.util.*;
+
+// Encapsulation: Keeping the fields private and providing public methods to access and modify them
+class Medicine {
+    private int id;
+    private String name;
+    private double price;
+    private int quantity;
+
+    Medicine(int id, String name, double price, int quantity) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    @Override
+    public String toString() {
+        return "ID: " + id + ", Name: " + name + ", Price: " + price + ", Quantity: " + quantity;
+    }
+}
+
+// Polymorphism: Overriding the toString method in Medicine class
+// Abstraction: Hiding complex operations and providing a simple interface
+class MedicalStore {
+    private List<Medicine> inventory = new ArrayList<>();
+    private double dailySales = 0;
+
+    public void addMedicine(Medicine medicine) {
+        inventory.add(medicine);
+        System.out.println("Medicine added successfully.");
+    }
+
+    public void removeMedicine(int id) {
+        inventory.removeIf(med -> med.getId() == id);
+        System.out.println("Medicine removed successfully.");
+    }
+
+    public void updateMedicine(int id, String name, double price, int quantity) {
+        for (Medicine med : inventory) {
+            if (med.getId() == id) {
+                med.setName(name);
+                med.setPrice(price);
+                med.setQuantity(quantity);
+                System.out.println("Medicine updated successfully.");
+                return;
+            }
+        }
+        System.out.println("Medicine not found.");
+    }
+
+    public void viewMedicine() {
+        if (inventory.isEmpty()) {
+            System.out.println("No medicines available.");
+        } else {
+            for (Medicine med : inventory) {
+                System.out.println(med);
+            }
+        }
+    }
+
+    public void searchMedicine(String name) {
+        for (Medicine med : inventory) {
+            if (med.getName().equalsIgnoreCase(name)) {
+                System.out.println(med);
+                return;
+            }
+        }
+        System.out.println("Medicine not found.");
+    }
+
+    public void updateDailySales(double amount) {
+        dailySales += amount;
+        System.out.println("Daily sales updated successfully. Current sales: " + dailySales);
+    }
+
+    public void viewDailySales() {
+        System.out.println("Total daily sales: " + dailySales);
+    }
+
+    public void generateStockReport() {
+        System.out.println("Stock Report:");
+        for (Medicine med : inventory) {
+            System.out.println(med);
+        }
+    }
+}
+
+// Inheritance: MedicalStoreManagement uses MedicalStore as a dependency
+public class MedicalStoreManagement {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        MedicalStore store = new MedicalStore();
+
+        while (true) {
+            System.out.println("\nMedical Store Management System");
+            System.out.println("1. Add Medicine");
+            System.out.println("2. View Medicines");
+            System.out.println("3. Update Medicine");
+            System.out.println("4. Remove Medicine");
+            System.out.println("5. Search Medicine");
+            System.out.println("6. Update Daily Sales");
+            System.out.println("7. View Daily Sales");
+            System.out.println("8. Generate Stock Report");
+            System.out.println("9. Exit");
+            System.out.print("Enter your choice: ");
+
+            int choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter ID: ");
+                    int id = scanner.nextInt();
+                    scanner.nextLine(); // consume newline
+                    System.out.print("Enter Name: ");
+                    String name = scanner.nextLine();
+                    System.out.print("Enter Price: ");
+                    double price = scanner.nextDouble();
+                    System.out.print("Enter Quantity: ");
+                    int quantity = scanner.nextInt();
+                    store.addMedicine(new Medicine(id, name, price, quantity));
+                    break;
+                case 2:
+                    store.viewMedicine();
+                    break;
+                case 3:
+                    System.out.print("Enter ID to update: ");
+                    int updateId = scanner.nextInt();
+                    scanner.nextLine(); // consume newline
+                    System.out.print("Enter New Name: ");
+                    String newName = scanner.nextLine();
+                    System.out.print("Enter New Price: ");
+                    double newPrice = scanner.nextDouble();
+                    System.out.print("Enter New Quantity: ");
+                    int newQuantity = scanner.nextInt();
+                    store.updateMedicine(updateId, newName, newPrice, newQuantity);
+                    break;
+                case 4:
+                    System.out.print("Enter ID to remove: ");
+                    int removeId = scanner.nextInt();
+                    store.removeMedicine(removeId);
+                    break;
+                case 5:
+                    System.out.print("Enter name to search: ");
+                    scanner.nextLine(); // consume newline
+                    String searchName = scanner.nextLine();
+                    store.searchMedicine(searchName);
+                    break;
+                case 6:
+                    System.out.print("Enter sales amount to update: ");
+                    double sales = scanner.nextDouble();
+                    store.updateDailySales(sales);
+                    break;
+                case 7:
+                    store.viewDailySales();
+                    break;
+                case 8:
+                    store.generateStockReport();
+                    break;
+                case 9:
+                    System.out.println("Exiting... Goodbye!");
+                    scanner.close();
+                    return;
+                default:
+                    System.out.println("Invalid choice! Please try again.");
+            }
+        }
+    }
+}
+    
